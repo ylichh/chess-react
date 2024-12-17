@@ -1,0 +1,15 @@
+.casilla{
+    height: calc(100% / 8);
+    width: calc(100% / 8);
+
+}
+.blanca {
+  background-color: #FFFDD0;
+}
+.negra {
+    background-color: #8B4513 ;
+}
+
+.sombreado{
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5);
+}

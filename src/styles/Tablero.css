@@ -1,0 +1,9 @@
+.tablero {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    align-content: flex-start;
+    border: 1px; /* Adjust the gap between the rows as needed */
+    width: 800px;
+    height: 800px;
+}
+
