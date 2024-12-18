@@ -1,33 +1,34 @@
-import { CasillaType } from "./initial_state"
-
+import { Casilla } from "../interfaces/casilla"
 import { obtenDireccionSentido,casillaOcupada } from "./utilidades"
-export function nuevaPosicionTablero(casillaPresionada:CasillaType,posicionTablero:any,casillaDestino:CasillaType){
+export function nuevaPosicionTablero(casillaPresionada:Casilla,posicionTablero:Casilla[],casillaDestino:Casilla){
 
-    let casillaOrigenActualizada=posicionTablero.find((casillaPosicion:CasillaType)=>casillaPosicion.numero===casillaPresionada.numero)
-    casillaOrigenActualizada.pieza=''
+    let casillaOrigenActualizada:Casilla|undefined=posicionTablero.find((casillaPosicion:Casilla)=>casillaPosicion.getNumero()===casillaPresionada.getNumero())
 
-    let casillaDestinoActualizada=posicionTablero.find((casillaPosicion:CasillaType)=>casillaPosicion.numero===casillaDestino.numero)
-    casillaDestinoActualizada.pieza=casillaPresionada.pieza
-    casillaDestinoActualizada.colorPieza=casillaPresionada.colorPieza
-
+    if (casillaOrigenActualizada){
+        casillaOrigenActualizada.setPiezaConColor('','')
+    }   
+    let casillaDestinoActualizada:Casilla|undefined=posicionTablero.find((casillaPosicion:Casilla)=>casillaPosicion.getNumero()===casillaDestino.getNumero())
+    if (casillaDestinoActualizada){
+        casillaDestinoActualizada.setPiezaConColor(casillaPresionada.getColorPieza(),casillaPresionada.getPieza())
+    }
     return posicionTablero
 }
 
 
-export function caminoLibre(casillaOrigen:CasillaType,casillaDestino:CasillaType,posicionTablero:CasillaType[]){
+export function caminoLibre(casillaOrigen:Casilla,casillaDestino:Casilla,posicionTablero:Casilla[]){
     //direccion, sentido
     let { sentidoColumna, sentidoFila } = obtenDireccionSentido(casillaOrigen, casillaDestino);
 
-    let filaDestino=casillaDestino.fila
-    let columnaDestino=casillaDestino.columna
+    let filaDestino=casillaDestino.getFila()
+    let columnaDestino=casillaDestino.getColumna()
 
-    let filaOrigen=casillaOrigen.fila??0
-    let columnaOrigen=casillaOrigen.columna??0
+    let filaOrigen=casillaOrigen.getFila()
+    let columnaOrigen=casillaOrigen.getColumna()
 
     let siguienteColumnaEvaluada=columnaOrigen+sentidoColumna//cuidao
     let siguienteFilaEvaluada=filaOrigen+sentidoFila//cuidao
 
-    let casillaEvaluada
+    let casillaEvaluada:Casilla|undefined
     console.log(`
         fila origen: ${filaOrigen}
         columna origen: ${columnaOrigen}
@@ -38,9 +39,9 @@ export function caminoLibre(casillaOrigen:CasillaType,casillaDestino:CasillaType
 
     while (!(siguienteColumnaEvaluada===columnaDestino&&siguienteFilaEvaluada===filaDestino)){
 
-        casillaEvaluada=posicionTablero.find(casilla =>
-            casilla.fila===siguienteFilaEvaluada&&
-            casilla.columna===siguienteColumnaEvaluada
+        casillaEvaluada=posicionTablero.find((casilla:Casilla) =>
+            casilla.getFila()===siguienteFilaEvaluada&&
+            casilla.getColumna()===siguienteColumnaEvaluada
         ) 
         console.log(`
             siguiente fila: ${siguienteFilaEvaluada}

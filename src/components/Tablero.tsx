@@ -1,68 +1,69 @@
 
 import { generateInitialState } from '../utils/initial_state';
 import '../styles/Tablero.css'
-import Casilla from './Casilla';
+import CasillaTag from './Casilla';
+import { Casilla } from '../interfaces/casilla';
 import { useState } from 'react';
 import { nuevaPosicionTablero } from '../utils/validadores_movimiento';
-import { CasillaType } from '../utils/initial_state';
 import { movimientoValido } from '../utils/flujo_validacion';
 
 export default function Tablero() {
     const [posicionTablero, setPosicionTablero] = useState(generateInitialState());
     const [estaPresionada, setEstaPresionada]=useState(false);
-    const [casillaOrigen, setCasillaOrigen]=useState<CasillaType>(
-    {
+    const [casillaOrigen, setCasillaOrigen]=useState<Casilla>(
+    new Casilla({
         color:'',
         columna: 0,
         fila:0,
         numero:0,
         pieza:'',
         colorPieza:''
-    });
+    }));
 
 
 
-    function logicaMovimientoEsValido(casillaOrigen:any,posicionTablero:any,casillaDestino:CasillaType){
+    function logicaMovimientoEsValido(casillaOrigen:any,posicionTablero:any,casillaDestino:Casilla){
         if (movimientoValido(casillaOrigen,posicionTablero,casillaDestino)){
             setPosicionTablero(nuevaPosicionTablero(casillaOrigen,posicionTablero,casillaDestino))
             console.log('movimiento valido');
         }
     }
-    function logicaMemoriaPiezaTocada(casillaPresionada:CasillaType){
-        setCasillaOrigen({
-            color:casillaPresionada.color,
-            columna: casillaPresionada.columna,
-            fila:casillaPresionada.fila,
-            numero:casillaPresionada.numero,
-            pieza:casillaPresionada.pieza,
-            colorPieza:casillaPresionada.colorPieza
-        })
+    function logicaMemoriaPiezaTocada(casillaPresionada:Casilla){
+        setCasillaOrigen(new Casilla({
+            color:casillaPresionada.getColor(),
+            columna: casillaPresionada.getColumna(),
+            fila:casillaPresionada.getFila(),
+            numero:casillaPresionada.getNumero(),
+            pieza:casillaPresionada.getPieza(),
+            colorPieza:casillaPresionada.getColorPieza()
+        }))
     }
 
     //hay que pasar toda la casilla
-    function pulsacionEnTablero(casillaPresionada:CasillaType){
+    function pulsacionEnTablero(casillaPresionada:Casilla){
 
         if (estaPresionada){
             setEstaPresionada(false);
             logicaMovimientoEsValido(casillaOrigen,posicionTablero,casillaPresionada);
         }
         else{
-            if (casillaPresionada.pieza){
+            if (casillaPresionada.getPieza()){
                 setEstaPresionada(true);
                 logicaMemoriaPiezaTocada(casillaPresionada);}
             }
     }
     const casillas=posicionTablero.map((casilla, index) => {
+        
         return (
-            <Casilla 
-            color={casilla.color} 
-            numeroCasilla={casilla.numero}
-            pieza={casilla.pieza}
-            colorPieza={casilla.colorPieza}
-            columna={casilla.columna}
-            fila={casilla.fila}
+            <CasillaTag 
+            color={casilla.getColor()} 
+            numeroCasilla={casilla.getNumero()}
+            pieza={casilla.getPieza()}
+            colorPieza={casilla.getColorPieza()}
+            columna={casilla.getColumna()}
+            fila={casilla.getFila()}
             pulsacionEnTablero={pulsacionEnTablero}
-            key={'casilla'+index}></Casilla>
+            key={'casilla'+index}></CasillaTag>
         )
     })
     return (
