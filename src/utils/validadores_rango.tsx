@@ -1,16 +1,16 @@
-import { CasillaType } from "./initial_state";
+import { Casilla } from "../interfaces/casilla";
 import { PIEZAS } from "../constants";
 import { obtenDireccionSentido,casillaOcupada } from "./utilidades";
-type RangoPosibleStrategy = (casillaOrigen: CasillaType,casillaDestino?:CasillaType,posicionTablero?: CasillaType[]) => CasillaType[];
+type RangoPosibleStrategy = (casillaOrigen: Casilla,casillaDestino?:Casilla,posicionTablero?: Casilla[]) => Casilla[];
 
 
-export function movimientoEnRango(casillaOrigen: CasillaType, casillaDestino: CasillaType,posicionTablero:CasillaType[]): boolean {
+export function movimientoEnRango(casillaOrigen: Casilla, casillaDestino: Casilla,posicionTablero:Casilla[]): boolean {
     let direccionSentido = obtenDireccionSentido(casillaOrigen, casillaDestino);
     console.log(`direccion sentido de la pieza ${direccionSentido}`);
 
     let estrategia: RangoPosibleStrategy;
 
-    switch (casillaOrigen.pieza) {
+    switch (casillaOrigen.getPieza()) {
         case PIEZAS.PEON_BLANCO:
         case PIEZAS.PEON_NEGRO:
             estrategia = rangoPosiblePeon;
@@ -27,12 +27,12 @@ export function movimientoEnRango(casillaOrigen: CasillaType, casillaDestino: Ca
             return false;
     }
     let rango=estrategia(casillaOrigen,casillaDestino,posicionTablero);
-    return rango.some(rango => rango.fila === casillaDestino.fila && rango.columna === casillaDestino.columna)
+    return rango.some(rango => rango.getFila() === casillaDestino.getFila() && rango.getColumna() === casillaDestino.getColumna())
 
 }
 
-const rangoPosiblePeon:RangoPosibleStrategy=(casillaOrigen:CasillaType,_: any,posicionTablero?:CasillaType[])=>{
-    let rangoPosible:CasillaType[]=[]
+const rangoPosiblePeon:RangoPosibleStrategy=(casillaOrigen:Casilla,_: any,posicionTablero?:Casilla[])=>{
+    let rangoPosible:Casilla[]=[]
 
     posicionTablero=posicionTablero??[]
     rangoPosible=rangoPosible.concat(_rangoMovimiento(casillaOrigen,posicionTablero))
@@ -42,54 +42,60 @@ const rangoPosiblePeon:RangoPosibleStrategy=(casillaOrigen:CasillaType,_: any,po
     return rangoPosible
 }
 
-const _rangoMovimiento=(casillaOrigen:CasillaType,posicionTablero:CasillaType[])=>{
-    let filaOrigen=casillaOrigen.fila??0
-    let columnaOrigen=casillaOrigen.columna??0
-    let rangoPosibleAux:CasillaType[]=[]
-    let rangoPosibleMovimiento:CasillaType[]=[]
+const _rangoMovimiento=(casillaOrigen:Casilla,posicionTablero:Casilla[])=>{
+    let filaOrigen=casillaOrigen.getFila()
+    let columnaOrigen=casillaOrigen.getColumna()
+    let rangoPosibleAux:Casilla[]=[]
+    let rangoPosibleMovimiento:Casilla[]=[]
     let casillaAux:any
-    const direccion = casillaOrigen.pieza === PIEZAS.PEON_BLANCO ? 1 : -1;
-    const filaInicial = casillaOrigen.pieza === PIEZAS.PEON_BLANCO ? 1 : 6;
+    const direccion = casillaOrigen.getPieza() === PIEZAS.PEON_BLANCO ? 1 : -1;
+    const filaInicial = casillaOrigen.getPieza() === PIEZAS.PEON_BLANCO ? 1 : 6;
     const filaSiguiente = filaOrigen + direccion;
     const filaDobleSiguiente = filaOrigen + 2 * direccion;
+    rangoPosibleAux.push(
+        new Casilla({
+            columna: columnaOrigen,
+            fila: filaSiguiente,
+        })
+    )
     if (filaOrigen === filaInicial) {
         rangoPosibleAux.push(
-            { fila: filaSiguiente, columna: columnaOrigen },
-            { fila: filaDobleSiguiente, columna: columnaOrigen }
-        );
-    } else {
-        rangoPosibleAux.push(
-            { fila: filaSiguiente, columna: columnaOrigen }
-        );
+            
+            new Casilla({
+                columna: columnaOrigen,
+                fila: filaDobleSiguiente,
+            })
+        )
     }
     rangoPosibleAux.forEach(casillaPosibleAux => {
-        casillaAux=posicionTablero.find(casillaTablero=>casillaTablero.fila===casillaPosibleAux.fila&&casillaTablero.columna===casillaPosibleAux.columna)
+        casillaAux=posicionTablero.find(casillaTablero=>casillaTablero.getFila()===casillaPosibleAux.getFila()&&casillaTablero.getColumna()===casillaPosibleAux.getColumna())
         if(!casillaOcupada(casillaAux)){
             rangoPosibleMovimiento.push(casillaAux)
         }
     })
-    return rangoPosibleMovimiento
+        return rangoPosibleMovimiento
+    
 }
-const _rangoCaptura=(casillaOrigen:CasillaType,posicionTablero:CasillaType[])=>{
-    let rangoPosibleCaptura:CasillaType[]=[]
-    let peon=casillaOrigen.pieza
+const _rangoCaptura=(casillaOrigen:Casilla,posicionTablero:Casilla[])=>{
+    let rangoPosibleCaptura:Casilla[]=[]
+    let peon=casillaOrigen.getPieza()
     const direccion = peon === PIEZAS.PEON_BLANCO ? 1 : -1;
-    let filaOrigen=casillaOrigen.fila??0
-    let columnaOrigen=casillaOrigen.columna??0
+    let filaOrigen=casillaOrigen.getFila()
+    let columnaOrigen=casillaOrigen.getColumna()
     const filaSiguiente = filaOrigen + direccion;
 
 
     let columnaCapturableIzquierda = columnaOrigen - 1;
     let columnaCapturableDerecha = columnaOrigen + 1;
     let casillasCapturables = [
-        { fila: filaSiguiente, columna: columnaCapturableIzquierda },
-        { fila: filaSiguiente, columna: columnaCapturableDerecha }
+        new Casilla({columna:columnaCapturableIzquierda, fila:filaSiguiente}),
+        new Casilla({columna:columnaCapturableDerecha, fila:filaSiguiente})
     ]
     casillasCapturables.forEach(casillaCapturable => {
         if(posicionTablero){
             posicionTablero.find(casillaTablero=>{
-                if(casillaTablero.fila===casillaCapturable.fila&&casillaTablero.columna===casillaCapturable.columna){
-                    if(casillaTablero.pieza){
+                if(casillaTablero.getFila()===casillaCapturable.getFila()&&casillaTablero.getColumna()===casillaCapturable.getColumna()){
+                    if(casillaTablero.getPieza()){
                         rangoPosibleCaptura.push(casillaCapturable)
                     }
                 }
@@ -98,14 +104,25 @@ const _rangoCaptura=(casillaOrigen:CasillaType,posicionTablero:CasillaType[])=>{
     }) 
     return rangoPosibleCaptura
 }
-const rangoPosibleRey:RangoPosibleStrategy=(casillaOrigen:CasillaType)=>{
-    let rangoPosible:CasillaType[]=[]
+const rangoPosibleRey:RangoPosibleStrategy=(casillaOrigen:Casilla)=>{
+    let rangoPosible:Casilla[]=[]
     return rangoPosible
 }
 
-const rangoPosibleCaballo:RangoPosibleStrategy=(casillaOrigen:CasillaType)=>{
-    let rangoPosible:CasillaType[]=[]
-
+const rangoPosibleCaballo:RangoPosibleStrategy=(casillaOrigen:Casilla)=>{
+    let rangoPosible:Casilla[]=[]
+    let filaOrigen=casillaOrigen.getFila()
+    let columnaOrigen=casillaOrigen.getColumna()
+    rangoPosible=[
+        new Casilla({columna:columnaOrigen+1,fila:filaOrigen+2}),
+        new Casilla({columna:columnaOrigen+1,fila:filaOrigen-2}),
+        new Casilla({columna:columnaOrigen-1,fila:filaOrigen+2}),
+        new Casilla({columna:columnaOrigen-1,fila:filaOrigen-2}),
+        new Casilla({columna:columnaOrigen+2,fila:filaOrigen+1}),
+        new Casilla({columna:columnaOrigen+2,fila:filaOrigen-1}),
+        new Casilla({columna:columnaOrigen-2,fila:filaOrigen+1}),
+        new Casilla({columna:columnaOrigen-2,fila:filaOrigen-1})
+    ]
     return rangoPosible
 }
 

@@ -1,16 +1,16 @@
-import { CasillaType } from "./initial_state";
+import { Casilla } from "../interfaces/casilla";
 import { PIEZAS,DIRECCIONES_TORRE,DIRECCIONES_ALFIL, DIRECCIONES_REINA } from "../constants";
 import { obtenDireccionSentido } from "./utilidades";
 type DireccionPosibleStrategy = (direccionSentido: any) => boolean;
 
 
-export function direccionPosible(casillaOrigen: CasillaType, casillaDestino: CasillaType): boolean {
+export function direccionPosible(casillaOrigen: Casilla, casillaDestino: Casilla): boolean {
     let direccionSentido = obtenDireccionSentido(casillaOrigen, casillaDestino);
     console.log(`direccion sentido de la pieza ${direccionSentido}`);
 
     let estrategia: DireccionPosibleStrategy;
 
-    switch (casillaOrigen.pieza) {
+    switch (casillaOrigen.getPieza()) {
         case PIEZAS.TORRE_BLANCA:
         case PIEZAS.TORRE_NEGRA:
             estrategia = direccionPosibleTorre;
