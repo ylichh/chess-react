@@ -1,5 +1,5 @@
-import {  Casilla } from "../interfaces/casilla";
-export function obtenDireccionSentido(casillaOrigen:Casilla,casillaDestino:Casilla){
+import {  Casilla, CasillaInterface } from "../interfaces/casilla";
+export function obtenDireccionSentido(casillaOrigen:CasillaInterface,casillaDestino:CasillaInterface){
 
     let filaDestino=casillaDestino.getFila()
     let filaOrigen=casillaOrigen.getFila()
@@ -18,10 +18,10 @@ export function obtenSigno(numero: number): number {
     return 0;
 }
 
-export function casillaOcupada(casillaDestino:Casilla){
+export function casillaOcupada(casillaDestino:CasillaInterface){
     return casillaDestino.getPieza() !== ''
 }
 
-export function esComestible(casillaOrigen:Casilla,casillaDestino:Casilla){
+export function esComestible(casillaOrigen:CasillaInterface,casillaDestino:CasillaInterface){
     return casillaOrigen.getColorPieza() !== casillaDestino.getColorPieza()
 }
