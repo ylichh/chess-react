@@ -2,15 +2,16 @@
 import { generateInitialState } from '../utils/initial_state';
 import '../styles/Tablero.css'
 import CasillaTag from './Casilla';
-import { Casilla } from '../interfaces/casilla';
+import { Casilla, CasillaInterface } from '../interfaces/casilla';
+import { TableroInterface } from '../interfaces/Tablero';
 import { useState } from 'react';
 import { nuevaPosicionTablero } from '../utils/validadores_movimiento';
 import { movimientoValido } from '../utils/flujo_validacion';
 
-export default function Tablero() {
-    const [posicionTablero, setPosicionTablero] = useState(generateInitialState());
+export default function TableroTag() {
+    const [posicionTablero, setPosicionTablero] = useState<TableroInterface>(generateInitialState());
     const [estaPresionada, setEstaPresionada]=useState(false);
-    const [casillaOrigen, setCasillaOrigen]=useState<Casilla>(
+    const [casillaOrigen, setCasillaOrigen]=useState<CasillaInterface>(
     new Casilla({
         color:'',
         columna: 0,
@@ -52,7 +53,7 @@ export default function Tablero() {
                 logicaMemoriaPiezaTocada(casillaPresionada);}
             }
     }
-    const casillas=posicionTablero.map((casilla, index) => {
+    const casillas=posicionTablero.getCasillas().map((casilla, index) => {
         
         return (
             <CasillaTag 

@@ -1,13 +1,17 @@
-import { Casilla } from "../interfaces/casilla"
+import { CasillaInterface,Casilla } from "../interfaces/casilla"
+import { TableroInterface } from "../interfaces/Tablero"
 import { obtenDireccionSentido,casillaOcupada } from "./utilidades"
-export function nuevaPosicionTablero(casillaPresionada:Casilla,posicionTablero:Casilla[],casillaDestino:Casilla){
+export function nuevaPosicionTablero(casillaPresionada:CasillaInterface,posicionTablero:TableroInterface,casillaDestino:CasillaInterface){
 
-    let casillaOrigenActualizada:Casilla|undefined=posicionTablero.find((casillaPosicion:Casilla)=>casillaPosicion.getNumero()===casillaPresionada.getNumero())
-
+    // let casillaOrigenActualizada:Casilla|undefined=posicionTablero.find((casillaPosicion:Casilla)=>casillaPosicion.getNumero()===casillaPresionada.getNumero())
+    let casillaOrigenActualizada:CasillaInterface|undefined=posicionTablero.getCasillaFromColumnFile(casillaPresionada)
+    
     if (casillaOrigenActualizada){
         casillaOrigenActualizada.setPiezaConColor('','')
     }   
-    let casillaDestinoActualizada:Casilla|undefined=posicionTablero.find((casillaPosicion:Casilla)=>casillaPosicion.getNumero()===casillaDestino.getNumero())
+    // let casillaDestinoActualizada:CasillaInterface|undefined=posicionTablero.find((casillaPosicion:Casilla)=>casillaPosicion.getNumero()===casillaDestino.getNumero())
+    let casillaDestinoActualizada:CasillaInterface|undefined=posicionTablero.getCasillaFromColumnFile(casillaDestino)
+
     if (casillaDestinoActualizada){
         casillaDestinoActualizada.setPiezaConColor(casillaPresionada.getColorPieza(),casillaPresionada.getPieza())
     }
@@ -15,7 +19,7 @@ export function nuevaPosicionTablero(casillaPresionada:Casilla,posicionTablero:C
 }
 
 
-export function caminoLibre(casillaOrigen:Casilla,casillaDestino:Casilla,posicionTablero:Casilla[]){
+export function caminoLibre(casillaOrigen:CasillaInterface,casillaDestino:CasillaInterface,posicionTablero:TableroInterface){
     //direccion, sentido
     let { sentidoColumna, sentidoFila } = obtenDireccionSentido(casillaOrigen, casillaDestino);
 
@@ -28,7 +32,7 @@ export function caminoLibre(casillaOrigen:Casilla,casillaDestino:Casilla,posicio
     let siguienteColumnaEvaluada=columnaOrigen+sentidoColumna//cuidao
     let siguienteFilaEvaluada=filaOrigen+sentidoFila//cuidao
 
-    let casillaEvaluada:Casilla|undefined
+    let casillaEvaluada:CasillaInterface|undefined
     console.log(`
         fila origen: ${filaOrigen}
         columna origen: ${columnaOrigen}
@@ -39,10 +43,14 @@ export function caminoLibre(casillaOrigen:Casilla,casillaDestino:Casilla,posicio
 
     while (!(siguienteColumnaEvaluada===columnaDestino&&siguienteFilaEvaluada===filaDestino)){
 
-        casillaEvaluada=posicionTablero.find((casilla:Casilla) =>
-            casilla.getFila()===siguienteFilaEvaluada&&
-            casilla.getColumna()===siguienteColumnaEvaluada
-        ) 
+        // casillaEvaluada=posicionTablero.find((casilla:Casilla) =>
+        //     casilla.getFila()===siguienteFilaEvaluada&&
+        //     casilla.getColumna()===siguienteColumnaEvaluada
+        // ) 
+        casillaEvaluada=posicionTablero.getCasillaFromColumnFile(new Casilla({
+            columna:siguienteColumnaEvaluada,
+            fila:siguienteFilaEvaluada
+        }))
         console.log(`
             siguiente fila: ${siguienteFilaEvaluada}
             siguiente columna: ${siguienteColumnaEvaluada}

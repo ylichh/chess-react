@@ -2,6 +2,7 @@ import { caminoLibre } from "../utils/validadores_movimiento";
 import { obtenDireccionSentido,esComestible,casillaOcupada } from "../utils/utilidades";
 import { describe, it, expect, beforeAll } from 'vitest';
 import { Casilla } from "../interfaces/casilla";
+import { Tablero } from "../interfaces/Tablero";
 describe("getDireccionSentido", () => {
     it("should return the direction and sense of the movement", () => {
         let casillaOrigen = new Casilla({ fila: 0, columna: 0 });
@@ -50,61 +51,61 @@ describe("piezaEnElCamino", () => {
     it("should return true if there is a piece in the way", () => {
         let casillaOrigen = new Casilla({ fila: 0, columna: 0 });
         let casillaDestino = new Casilla({ fila: 0, columna: 2 });
-        let posicionTablero = [new Casilla({ fila: 0, columna: 1, pieza: "peon" })];
+        let posicionTablero = new Tablero({ casillas: [new Casilla({ fila: 0, columna: 1, pieza: "peon" })] });
         expect(caminoLibre(casillaOrigen, casillaDestino, posicionTablero)).toBe(false);
     });
     it("should return true if there is a piece in the way", () => {
         let casillaOrigen = new Casilla({ fila: 1, columna: 0 });
         let casillaDestino = new Casilla({ fila: 1, columna: 5 });
-        let posicionTablero = [new Casilla({ fila: 1, columna: 3, pieza: "peon" })];
+        let posicionTablero = new Tablero({ casillas: [new Casilla({ fila: 1, columna: 3, pieza: "peon" })] });
         expect(caminoLibre(casillaOrigen, casillaDestino, posicionTablero)).toBe(false);
     });
     it("should return true if there is a piece in the way", () => {
         let casillaOrigen = new Casilla({ fila: 1, columna: 0 });
         let casillaDestino = new Casilla({ fila: 1, columna: 5 });
-        let posicionTablero = [new Casilla({ fila: 2, columna: 3, pieza: "peon" })];
+        let posicionTablero = new Tablero({ casillas: [new Casilla({ fila: 2, columna: 3, pieza: "peon" })] });
         expect(caminoLibre(casillaOrigen, casillaDestino, posicionTablero)).toBe(true);
     });
     it("should return true if there is a piece in the way", () => {
         let casillaOrigen = new Casilla({ fila: 1, columna: 5 });
         let casillaDestino = new Casilla({ fila: 1, columna: 0 });
-        let posicionTablero = [new Casilla({ fila: 1, columna: 3, pieza: "peon" })];
+        let posicionTablero = new Tablero({ casillas: [new Casilla({ fila: 1, columna: 3, pieza: "peon" })] });
         expect(caminoLibre(casillaOrigen, casillaDestino, posicionTablero)).toBe(false);
     });
     it("should return true if there is a piece in the way starting from a corner", () => {
         let casillaOrigen = new Casilla({ fila: 7, columna: 7 });
         let casillaDestino = new Casilla({ fila: 0, columna: 0 });
-        let posicionTablero = [new Casilla({ fila: 1, columna: 3, pieza: "peon" })];
+        let posicionTablero = new Tablero({ casillas: [new Casilla({ fila: 1, columna: 3, pieza: "peon" })] });
         expect(caminoLibre(casillaOrigen, casillaDestino, posicionTablero)).toBe(true);
     });
     it("should return false", () => {
         let casillaOrigen = new Casilla({ fila: 7, columna: 5 });
         let casillaDestino = new Casilla({ fila: 1, columna: 5 });
-        let posicionTablero = [new Casilla({ fila: 4, columna: 5, pieza: "peon" })];
+        let posicionTablero = new Tablero({ casillas: [new Casilla({ fila: 4, columna: 5, pieza: "peon" })] });
         expect(caminoLibre(casillaOrigen, casillaDestino, posicionTablero)).toBe(false);
     });
     it("should return true si hay una pieza en la casilla de destino", () => {
         let casillaOrigen = new Casilla({ fila: 7, columna: 7 });
         let casillaDestino = new Casilla({ fila: 0, columna: 0 });
-        let posicionTablero = [new Casilla({ fila: 0, columna: 0, pieza: "peon" })];
+        let posicionTablero = new Tablero({ casillas: [new Casilla({ fila: 0, columna: 0, pieza: "peon" })] });
         expect(caminoLibre(casillaOrigen, casillaDestino, posicionTablero)).toBe(true);
     });
     it("should return true si hay una pieza en la casilla de destino", () => {
         let casillaOrigen = new Casilla({ fila: 0, columna: 0 });
         let casillaDestino = new Casilla({ fila: 2, columna: 0 });
-        let posicionTablero = [new Casilla({ fila: 7, columna: 7, pieza: "peon" })];
+        let posicionTablero = new Tablero({ casillas: [new Casilla({ fila: 7, columna: 7, pieza: "peon" })] });
         expect(caminoLibre(casillaOrigen, casillaDestino, posicionTablero)).toBe(true);
     });
     it("should return true si hay una pieza en la casilla destino", () => {
         let casillaOrigen = new Casilla({ fila: 3, columna: 4 });
         let casillaDestino = new Casilla({ fila: 5, columna: 6 });
-        let posicionTablero = [new Casilla({ fila: 5, columna: 6, pieza: "peon" })];
+        let posicionTablero = new Tablero({ casillas: [new Casilla({ fila: 5, columna: 6, pieza: "peon" })] });
         expect(caminoLibre(casillaOrigen, casillaDestino, posicionTablero)).toBe(true);
     });
     it("should return true al movimiento del peon comiendo desde posicion de origen", () => {
         let casillaOrigen = new Casilla({ fila: 1, columna: 2 });
         let casillaDestino = new Casilla({ fila: 2, columna: 3 });
-        let posicionTablero = [new Casilla({ fila: 5, columna: 6, pieza: "peon_blanco" })];
+        let posicionTablero = new Tablero({ casillas: [new Casilla({ fila: 5, columna: 6, pieza: "peon_blanco" })] });
         expect(caminoLibre(casillaOrigen, casillaDestino, posicionTablero)).toBe(true);
     });
 });

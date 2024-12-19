@@ -1,30 +1,17 @@
 
 import { CASILLAS_DATA,PIEZAS,COLOR_PIEZA } from '../constants';
 import { Casilla } from '../interfaces/casilla';
-export interface CasillaType {
-  color?: string;
-  columna?: number;
-  fila?: number;
-  numero?: number;
-  pieza?: string;
-  colorPieza?: string;
-}
-interface EstadoTablero {
-  casillas: Casilla[];
-}
-interface PiezaType{
-  pieza?:string;
-  colorPieza?:string;
-  codigo?:string;
-}
+import { Tablero } from '../interfaces/Tablero';
+
 export const generateInitialState = () => {
-  const estado_tablero:EstadoTablero={casillas:[]};
+  let estado_tablero: Tablero
+  const casillas:Casilla[]=[]
   for (let numero_casilla = 0; numero_casilla < 64; numero_casilla++) {
     const fila=Math.floor(numero_casilla/8)
     const columna=numero_casilla % 8
     const [pieza,colorPieza]= pieza_color(columna,fila,numero_casilla+1)
 
-    estado_tablero.casillas.push(
+    casillas.push(
       new Casilla({
         color:color_casilla(numero_casilla),
         columna:columna, //x
@@ -37,8 +24,8 @@ export const generateInitialState = () => {
       )
     ); 
   }
-
-  return estado_tablero.casillas;
+  estado_tablero=new Tablero({casillas:casillas})
+  return estado_tablero;
 };
 
 const color_casilla=(casilla:number)=>{
