@@ -1,5 +1,5 @@
 
-import { Casilla, CasillaInterface } from "../interfaces/casilla";
+import { CasillaInterface } from "../interfaces/casilla";
 import { PIEZAS, PIEZAS_DE_RANGO,PIEZAS_DE_DIRECCION, PIEZAS_CAMINO_LIBRE } from "../constants"
 import { caminoLibre,} from "./validadores_movimiento"
 import { movimientoEnRango } from "./validadores_rango";

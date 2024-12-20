@@ -1,22 +1,7 @@
 import { CasillaInterface,Casilla } from "../interfaces/casilla"
 import { TableroInterface } from "../interfaces/Tablero"
 import { obtenDireccionSentido,casillaOcupada } from "./utilidades"
-export function nuevaPosicionTablero(casillaPresionada:CasillaInterface,posicionTablero:TableroInterface,casillaDestino:CasillaInterface){
 
-    // let casillaOrigenActualizada:Casilla|undefined=posicionTablero.find((casillaPosicion:Casilla)=>casillaPosicion.getNumero()===casillaPresionada.getNumero())
-    let casillaOrigenActualizada:CasillaInterface|undefined=posicionTablero.getCasillaFromColumnFile(casillaPresionada)
-    
-    if (casillaOrigenActualizada){
-        casillaOrigenActualizada.setPiezaConColor('','')
-    }   
-    // let casillaDestinoActualizada:CasillaInterface|undefined=posicionTablero.find((casillaPosicion:Casilla)=>casillaPosicion.getNumero()===casillaDestino.getNumero())
-    let casillaDestinoActualizada:CasillaInterface|undefined=posicionTablero.getCasillaFromColumnFile(casillaDestino)
-
-    if (casillaDestinoActualizada){
-        casillaDestinoActualizada.setPiezaConColor(casillaPresionada.getColorPieza(),casillaPresionada.getPieza())
-    }
-    return posicionTablero
-}
 
 
 export function caminoLibre(casillaOrigen:CasillaInterface,casillaDestino:CasillaInterface,posicionTablero:TableroInterface){

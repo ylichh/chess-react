@@ -111,6 +111,16 @@ const _rangoCaptura=(casillaOrigen:CasillaInterface,posicionTablero:TableroInter
 }
 const rangoPosibleRey:RangoPosibleStrategy=(casillaOrigen:CasillaInterface)=>{
     let rangoPosible:Casilla[]=[]
+    rangoPosible=[
+        new Casilla({columna:casillaOrigen.getColumna()+1,fila:casillaOrigen.getFila()}),
+        new Casilla({columna:casillaOrigen.getColumna()-1,fila:casillaOrigen.getFila()}),
+        new Casilla({columna:casillaOrigen.getColumna(),fila:casillaOrigen.getFila()+1}),
+        new Casilla({columna:casillaOrigen.getColumna(),fila:casillaOrigen.getFila()-1}),
+        new Casilla({columna:casillaOrigen.getColumna()+1,fila:casillaOrigen.getFila()+1}),
+        new Casilla({columna:casillaOrigen.getColumna()+1,fila:casillaOrigen.getFila()-1}),
+        new Casilla({columna:casillaOrigen.getColumna()-1,fila:casillaOrigen.getFila()+1}),
+        new Casilla({columna:casillaOrigen.getColumna()-1,fila:casillaOrigen.getFila()-1})
+    ]
     return rangoPosible
 }
 
