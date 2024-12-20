@@ -23,25 +23,18 @@ export default function TableroTag() {
 
 
 
-    function logicaMovimientoEsValido(casillaOrigen:any,posicionTablero:any,casillaDestino:Casilla){
+    function logicaMovimientoEsValido(casillaOrigen:CasillaInterface,posicionTablero:TableroInterface,casillaDestino:CasillaInterface){
         if (movimientoValido(casillaOrigen,posicionTablero,casillaDestino)){
             setPosicionTablero(nuevaPosicionTablero(casillaOrigen,posicionTablero,casillaDestino))
             console.log('movimiento valido');
         }
     }
-    function logicaMemoriaPiezaTocada(casillaPresionada:Casilla){
-        setCasillaOrigen(new Casilla({
-            color:casillaPresionada.getColor(),
-            columna: casillaPresionada.getColumna(),
-            fila:casillaPresionada.getFila(),
-            numero:casillaPresionada.getNumero(),
-            pieza:casillaPresionada.getPieza(),
-            colorPieza:casillaPresionada.getColorPieza()
-        }))
+    function logicaMemoriaPiezaTocada(casillaPresionada:CasillaInterface){
+        setCasillaOrigen(casillaPresionada);
     }
 
     //hay que pasar toda la casilla
-    function pulsacionEnTablero(casillaPresionada:Casilla){
+    function pulsacionEnTablero(casillaPresionada:CasillaInterface){
 
         if (estaPresionada){
             setEstaPresionada(false);

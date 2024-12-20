@@ -3,7 +3,7 @@ import '../styles/Casilla.css'
 
 import { PIEZA_PNG } from '../utils/imagen_dispatcher';
 import { useState } from 'react';
-import { Casilla } from '../interfaces/casilla';
+import { CasillaInterface,Casilla } from '../interfaces/casilla';
 const CASILLA_COLORES: { [key: string]: string } = {
     casilla_negra:'negra',
     casilla_blanca:'blanca',
@@ -16,7 +16,7 @@ export default function CasillaTag({color,numeroCasilla,pieza,colorPieza,columna
         setSombreado(!sombreado);
     }
     function casillaPresionada(){
-        const casillaPresionada:Casilla=new Casilla({
+        const casillaPresionada:CasillaInterface=new Casilla({
             color:color,
             columna:columna,
             fila:fila,

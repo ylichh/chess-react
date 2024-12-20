@@ -1,10 +1,10 @@
-import { Casilla } from "../interfaces/casilla";
+import { Casilla, CasillaInterface } from "../interfaces/casilla";
 import { PIEZAS,DIRECCIONES_TORRE,DIRECCIONES_ALFIL, DIRECCIONES_REINA } from "../constants";
 import { obtenDireccionSentido } from "./utilidades";
 type DireccionPosibleStrategy = (direccionSentido: any) => boolean;
 
 
-export function direccionPosible(casillaOrigen: Casilla, casillaDestino: Casilla): boolean {
+export function direccionPosible(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface): boolean {
     let direccionSentido = obtenDireccionSentido(casillaOrigen, casillaDestino);
     console.log(`direccion sentido de la pieza ${direccionSentido}`);
 

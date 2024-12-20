@@ -1,11 +1,12 @@
 
-import { Casilla } from "../interfaces/casilla";
+import { Casilla, CasillaInterface } from "../interfaces/casilla";
 import { PIEZAS, PIEZAS_DE_RANGO,PIEZAS_DE_DIRECCION, PIEZAS_CAMINO_LIBRE } from "../constants"
 import { caminoLibre,} from "./validadores_movimiento"
 import { movimientoEnRango } from "./validadores_rango";
 import { direccionPosible } from "./validador_direccion";
 import { esComestible,casillaOcupada } from "./utilidades";
-export function movimientoValido(casillaOrigen:Casilla,posicionTablero:any,casillaDestino:Casilla){
+import { TableroInterface } from "../interfaces/Tablero";
+export function movimientoValido(casillaOrigen:CasillaInterface,posicionTablero:TableroInterface,casillaDestino:CasillaInterface){
     //terminar de dat bola
     //movimiento en rango para peones o caballos
     // if (!casillaOrigen.pieza) {
