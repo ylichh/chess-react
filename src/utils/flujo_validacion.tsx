@@ -1,4 +1,4 @@
-import { CasillaType} from "./initial_state";
+
 import { Casilla } from "../interfaces/casilla";
 import { PIEZAS, PIEZAS_DE_RANGO,PIEZAS_DE_DIRECCION, PIEZAS_CAMINO_LIBRE } from "../constants"
 import { caminoLibre,} from "./validadores_movimiento"
