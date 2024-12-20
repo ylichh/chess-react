@@ -5,7 +5,6 @@ import CasillaTag from './Casilla';
 import { Casilla, CasillaInterface } from '../interfaces/casilla';
 import { TableroInterface } from '../interfaces/Tablero';
 import { useState } from 'react';
-import { nuevaPosicionTablero } from '../utils/validadores_movimiento';
 import { movimientoValido } from '../utils/flujo_validacion';
 
 export default function TableroTag() {
@@ -25,7 +24,7 @@ export default function TableroTag() {
 
     function logicaMovimientoEsValido(casillaOrigen:CasillaInterface,posicionTablero:TableroInterface,casillaDestino:CasillaInterface){
         if (movimientoValido(casillaOrigen,posicionTablero,casillaDestino)){
-            setPosicionTablero(nuevaPosicionTablero(casillaOrigen,posicionTablero,casillaDestino))
+            setPosicionTablero(posicionTablero.updateTableroAfterMovement(casillaOrigen,casillaDestino));
             console.log('movimiento valido');
         }
     }
