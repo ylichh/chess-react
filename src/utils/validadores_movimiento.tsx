@@ -28,10 +28,6 @@ export function caminoLibre(casillaOrigen:CasillaInterface,casillaDestino:Casill
 
     while (!(siguienteColumnaEvaluada===columnaDestino&&siguienteFilaEvaluada===filaDestino)){
 
-        // casillaEvaluada=posicionTablero.find((casilla:Casilla) =>
-        //     casilla.getFila()===siguienteFilaEvaluada&&
-        //     casilla.getColumna()===siguienteColumnaEvaluada
-        // ) 
         casillaEvaluada=posicionTablero.getCasillaFromColumnFile(new Casilla({
             columna:siguienteColumnaEvaluada,
             fila:siguienteFilaEvaluada
