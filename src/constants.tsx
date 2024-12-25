@@ -81,3 +81,9 @@ export const PIEZAS_CAMINO_LIBRE=[
     PIEZAS.REY_NEGRO,
     PIEZAS.REY_BLANCO
 ]
+
+export enum EventosPartida{
+    PIEZA_SOLTADA,
+    MOVIMIENTO_VALIDADO,
+    PIEZA_TOCADA
+}

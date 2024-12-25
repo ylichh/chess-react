@@ -6,71 +6,74 @@ import { Casilla, CasillaInterface } from '../interfaces/casilla';
 import { TableroInterface } from '../interfaces/Tablero';
 import { useState } from 'react';
 import { movimientoValido } from '../utils/flujo_validacion';
-import { COLOR_PIEZA } from '../constants';
+import { EventosPartida } from '../constants';
+import { EstadoPartidaInterface,EventoPiezaPulsadaInterface } from '../states/estadoPartida';
+import { partidaReducer } from '../dispatchers/partida-dispatcher';
+import { useReducer } from 'react';
+
 export default function TableroTag() {
     const [posicionTablero, setPosicionTablero] = useState<TableroInterface>(generateInitialState());
-    const [casillaOrigen, setCasillaOrigen]=useState<CasillaInterface>(
-    new Casilla({
-        color:'',
-        columna: 0,
-        fila:0,
-        numero:0,
-        pieza:'',
-        colorPieza:''
-    }));
-    //player memory
-    const [estadoPartida, setEstadoPartida]=useState({
+    
+    const estadoInicialPartida:EstadoPartidaInterface={
         turno:0,
-        siguienteJugador:COLOR_PIEZA.BLANCO,
-        hayPiezaPresionada:false
-    })
-
-    function handlePosicionTablero(casillaDestino:CasillaInterface){
-        setPosicionTablero(posicionTablero.updateTableroAfterMovement(casillaOrigen,casillaDestino));
-    }
-    function handleEstadoPartida(){
-            setEstadoPartida((estadoPrevio)=>{
-                if(estadoPrevio.siguienteJugador===COLOR_PIEZA.BLANCO){
-                    return {...estadoPrevio,siguienteJugador:COLOR_PIEZA.NEGRO}
-                }else{
-                    return {...estadoPrevio,siguienteJugador:COLOR_PIEZA.BLANCO}
-                }
-            }
-        )
-    }
-    function handleEstaPresionada(estaPresionada:boolean){
-        setEstadoPartida((estadoPrevio)=>{
-            return({...estadoPrevio,hayPiezaPresionada:estaPresionada})
+        hayPiezaPresionada:false,
+        casillaPresionada:new Casilla({
+            color:'',
+            columna: 0,
+            fila:0,
+            numero:0,
+            pieza:'',
+            colorPieza:''
         })
     }
+    const [estadoPartida, estadoPartidaDispatcher]=useReducer(partidaReducer,estadoInicialPartida)
+
+    function handleActualizaPosicionTablero(casillaDestino:CasillaInterface){
+        setPosicionTablero(posicionTablero.updateTableroAfterMovement(estadoPartida.casillaPresionada,casillaDestino));
+    }
+
+
 
 
     function logicaMovimientoEsValido(casillaOrigen:CasillaInterface,posicionTablero:TableroInterface,casillaDestino:CasillaInterface){
         if (movimientoValido(casillaOrigen,posicionTablero,casillaDestino)){
-            handlePosicionTablero(casillaDestino)
-            handleEstadoPartida()
+            handleActualizaPosicionTablero(casillaDestino)
+            // handleEstadoPartida()
             //guardar movimiento
             //cambiar turno
             console.log('movimiento valido');
         }
     }
-    function handlePiezaTocada(casillaPresionada:CasillaInterface){
-        setCasillaOrigen(casillaPresionada);
+    
+    function handlePiezaSoltada(estaPresionada:boolean){
+        estadoPartidaDispatcher(
+            {
+                type: EventosPartida.PIEZA_SOLTADA,
+                hayPiezaPresionada: estaPresionada
+            } as EventoPiezaPulsadaInterface
+        )
     }
-
+    function handlePiezaTocada(casillaPresionada:CasillaInterface){
+        estadoPartidaDispatcher(
+            {
+                type: EventosPartida.PIEZA_TOCADA,
+                casillaPresionada:casillaPresionada,
+                hayPiezaPresionada:true
+            }
+        )
+    }
     //hay que pasar toda la casilla
     function pulsacionEnTablero(casillaPresionada:CasillaInterface){
 
             if (estadoPartida.hayPiezaPresionada){
-
-                handleEstaPresionada(false)
-                logicaMovimientoEsValido(casillaOrigen,posicionTablero,casillaPresionada);
+                handlePiezaSoltada(false)
+                logicaMovimientoEsValido(estadoPartida.casillaPresionada,posicionTablero,casillaPresionada);
             }
             else{
                 if (casillaPresionada.getPieza()){
-                    handleEstaPresionada(true)
-                    handlePiezaTocada(casillaPresionada);}
+                    handlePiezaTocada(casillaPresionada)
                 }
+            }
         
 
     }
