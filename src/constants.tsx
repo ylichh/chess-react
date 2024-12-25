@@ -83,7 +83,7 @@ export const PIEZAS_CAMINO_LIBRE=[
 ]
 
 export enum EventosPartida{
-    CASILLA_PRESIONADA,
+    PIEZA_SOLTADA,
     MOVIMIENTO_VALIDADO,
-    ALMACENA_PIEZA
+    PIEZA_TOCADA
 }

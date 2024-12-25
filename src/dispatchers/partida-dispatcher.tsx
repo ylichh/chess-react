@@ -3,7 +3,7 @@ import { EventosPartida } from "../constants"
 export function partidaReducer(estadoAnterior:EstadoPartidaInterface,evento:EventoPartida):EstadoPartidaInterface{
     //eter aqui los eventos a medida que sucedan
     switch(evento.type){
-        case EventosPartida.CASILLA_PRESIONADA:
+        case EventosPartida.PIEZA_SOLTADA:
             return {
                 ...estadoAnterior,
                 hayPiezaPresionada: evento.hayPiezaPresionada,
@@ -14,9 +14,10 @@ export function partidaReducer(estadoAnterior:EstadoPartidaInterface,evento:Even
                     ...estadoAnterior,
                     hayPiezaPresionada: true
                 }
-        case EventosPartida.ALMACENA_PIEZA:
+        case EventosPartida.PIEZA_TOCADA:
             return {
                 ...estadoAnterior,
+                hayPiezaPresionada: evento.hayPiezaPresionada,
                 casillaPresionada: evento.casillaPresionada
             }
     }

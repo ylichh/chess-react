@@ -7,7 +7,7 @@ export interface EstadoPartidaInterface {
     casillaPresionada:CasillaInterface
 }
 export interface EventoPiezaPulsadaInterface{
-    type:EventosPartida.CASILLA_PRESIONADA
+    type:EventosPartida.PIEZA_SOLTADA
     hayPiezaPresionada:boolean
     casillaPresionada:CasillaInterface
 }
@@ -15,9 +15,14 @@ export interface EventoMovimientoValidadoInterface{
     type:EventosPartida.MOVIMIENTO_VALIDADO
     hayPiezaPresionada:boolean
 }
-export interface EventoAlmacenaCasilla{
-    type:EventosPartida.ALMACENA_PIEZA
+
+export interface EventoPiezaTocada{
+    type:EventosPartida.PIEZA_TOCADA
     casillaPresionada:CasillaInterface
+    hayPiezaPresionada:boolean
 }
 
-export type EventoPartida=EventoPiezaPulsadaInterface|EventoMovimientoValidadoInterface|EventoAlmacenaCasilla
+export type EventoPartida = 
+    | EventoPiezaPulsadaInterface
+    | EventoMovimientoValidadoInterface
+    | EventoPiezaTocada;

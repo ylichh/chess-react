@@ -6,13 +6,14 @@ import { Casilla, CasillaInterface } from '../interfaces/casilla';
 import { TableroInterface } from '../interfaces/Tablero';
 import { useState } from 'react';
 import { movimientoValido } from '../utils/flujo_validacion';
-import { COLOR_PIEZA,EventosPartida } from '../constants';
-import { EstadoPartidaInterface,EventoPiezaPulsadaInterface,EventoAlmacenaCasilla } from '../states/estadoPartida';
+import { EventosPartida } from '../constants';
+import { EstadoPartidaInterface,EventoPiezaPulsadaInterface } from '../states/estadoPartida';
 import { partidaReducer } from '../dispatchers/partida-dispatcher';
 import { useReducer } from 'react';
 
 export default function TableroTag() {
     const [posicionTablero, setPosicionTablero] = useState<TableroInterface>(generateInitialState());
+    
     const estadoInicialPartida:EstadoPartidaInterface={
         turno:0,
         hayPiezaPresionada:false,
@@ -25,10 +26,9 @@ export default function TableroTag() {
             colorPieza:''
         })
     }
-
     const [estadoPartida, estadoPartidaDispatcher]=useReducer(partidaReducer,estadoInicialPartida)
 
-    function handlePosicionTablero(casillaDestino:CasillaInterface){
+    function handleActualizaPosicionTablero(casillaDestino:CasillaInterface){
         setPosicionTablero(posicionTablero.updateTableroAfterMovement(estadoPartida.casillaPresionada,casillaDestino));
     }
 
@@ -37,42 +37,43 @@ export default function TableroTag() {
 
     function logicaMovimientoEsValido(casillaOrigen:CasillaInterface,posicionTablero:TableroInterface,casillaDestino:CasillaInterface){
         if (movimientoValido(casillaOrigen,posicionTablero,casillaDestino)){
-            handlePosicionTablero(casillaDestino)
+            handleActualizaPosicionTablero(casillaDestino)
             // handleEstadoPartida()
             //guardar movimiento
             //cambiar turno
             console.log('movimiento valido');
         }
     }
-    function handlePiezaTocada(casillaPresionada:CasillaInterface){
+    
+    function handlePiezaSoltada(estaPresionada:boolean){
         estadoPartidaDispatcher(
             {
-                type: EventosPartida.ALMACENA_PIEZA,
-                casillaPresionada: casillaPresionada
-            } as EventoAlmacenaCasilla
-        )
-    }
-    function handleEstaPresionada(estaPresionada:boolean){
-        estadoPartidaDispatcher(
-            {
-                type: EventosPartida.CASILLA_PRESIONADA,
+                type: EventosPartida.PIEZA_SOLTADA,
                 hayPiezaPresionada: estaPresionada
             } as EventoPiezaPulsadaInterface
         )
     }
-
+    function handlePiezaTocada(casillaPresionada:CasillaInterface){
+        estadoPartidaDispatcher(
+            {
+                type: EventosPartida.PIEZA_TOCADA,
+                casillaPresionada:casillaPresionada,
+                hayPiezaPresionada:true
+            }
+        )
+    }
     //hay que pasar toda la casilla
     function pulsacionEnTablero(casillaPresionada:CasillaInterface){
 
             if (estadoPartida.hayPiezaPresionada){
-                handleEstaPresionada(false)
+                handlePiezaSoltada(false)
                 logicaMovimientoEsValido(estadoPartida.casillaPresionada,posicionTablero,casillaPresionada);
             }
             else{
                 if (casillaPresionada.getPieza()){
-                    handleEstaPresionada(true)
-                    handlePiezaTocada(casillaPresionada);}
+                    handlePiezaTocada(casillaPresionada)
                 }
+            }
         
 
     }
