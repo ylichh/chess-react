@@ -1,22 +1,20 @@
 
 import { CasillaInterface } from "../interfaces/casilla";
-import { PIEZAS, PIEZAS_DE_RANGO,PIEZAS_DE_DIRECCION, PIEZAS_CAMINO_LIBRE } from "../constants"
+import { PIEZAS, PIEZAS_DE_RANGO,PIEZAS_DE_DIRECCION, PIEZAS_CAMINO_LIBRE,COLOR_PIEZA } from "../constants"
 import { caminoLibre,} from "./validadores_movimiento"
 import { movimientoEnRango } from "./validadores_rango";
 import { direccionPosible } from "./validador_direccion";
 import { esComestible,casillaOcupada } from "./utilidades";
 import { TableroInterface } from "../interfaces/Tablero";
-export function movimientoValido(casillaOrigen:CasillaInterface,posicionTablero:TableroInterface,casillaDestino:CasillaInterface){
-    //terminar de dat bola
-    //movimiento en rango para peones o caballos
-    // if (!casillaOrigen.pieza) {
-    //     return false;
-    // }
-    //todo: casillatype meter constantes
-    //
+export function movimientoValido(casillaOrigen:CasillaInterface,posicionTablero:TableroInterface,casillaDestino:CasillaInterface,siguienteJugador:COLOR_PIEZA){
+    //pasar a patron estrategia
     let pieza=casillaOrigen.getPieza() as PIEZAS
     ////
     let cumpleCondiciones=false 
+
+    if (casillaOrigen.getColorPieza()!==siguienteJugador){
+        return false
+    }
     if (PIEZAS_DE_RANGO.includes(pieza)){
         cumpleCondiciones = movimientoEnRango(casillaOrigen, casillaDestino,posicionTablero);
     }
