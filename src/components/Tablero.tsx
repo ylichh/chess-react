@@ -1,73 +1,42 @@
 
-import { generateInitialState } from '../utils/initial_state';
 import '../styles/Tablero.css'
 import CasillaTag from './Casilla';
-import { Casilla, CasillaInterface } from '../interfaces/casilla';
+import { CasillaInterface } from '../interfaces/casilla';
 import { TableroInterface } from '../interfaces/Tablero';
-import { useState } from 'react';
+
 import { movimientoValido } from '../utils/flujo_validacion';
-import { EventosPartida } from '../constants';
-import { EstadoPartidaInterface,EventoPiezaPulsadaInterface } from '../states/estadoPartida';
-import { partidaReducer } from '../dispatchers/partida-dispatcher';
-import { useReducer } from 'react';
 
+//redux
+//setup
+import { useAppSelector,useAppDispatch } from '../redux/hooks';
+//slices
+import {actualizarPosicionTablero, tocarPieza, soltarPieza, selecPiezaTocada,selectPosicionTablero,selectSiguienteJugador,selectPiezaEstaTocada } from '../redux/slices/partida';
 export default function TableroTag() {
-    const [posicionTablero, setPosicionTablero] = useState<TableroInterface>(generateInitialState());
-    
-    const estadoInicialPartida:EstadoPartidaInterface={
-        turno:0,
-        hayPiezaPresionada:false,
-        casillaPresionada:new Casilla({
-            color:'',
-            columna: 0,
-            fila:0,
-            numero:0,
-            pieza:'',
-            colorPieza:''
-        })
-    }
-    const [estadoPartida, estadoPartidaDispatcher]=useReducer(partidaReducer,estadoInicialPartida)
 
-    function handleActualizaPosicionTablero(casillaDestino:CasillaInterface){
-        setPosicionTablero(posicionTablero.updateTableroAfterMovement(estadoPartida.casillaPresionada,casillaDestino));
-    }
+    const hayPiezaTocada=useAppSelector(selectPiezaEstaTocada)
+    const piezaTocada=useAppSelector(selecPiezaTocada)
+    const siguienteJugador=useAppSelector(selectSiguienteJugador)
+    const posicionEnTablero=useAppSelector(selectPosicionTablero)
+    const dispatch=useAppDispatch()
 
 
-
-
-    function logicaMovimientoEsValido(casillaOrigen:CasillaInterface,posicionTablero:TableroInterface,casillaDestino:CasillaInterface){
-        if (movimientoValido(casillaOrigen,posicionTablero,casillaDestino)){
-            handleActualizaPosicionTablero(casillaDestino)
-            // handleEstadoPartida()
-            //guardar movimiento
-            //cambiar turno
+    function handlePiezaSoltada(casillaDestino:CasillaInterface){
+        if (movimientoValido(piezaTocada,posicionEnTablero,casillaDestino,siguienteJugador)){
+            dispatch(actualizarPosicionTablero({piezaTocada:piezaTocada,casillaDestino:casillaDestino}))
             console.log('movimiento valido');
         }
+        dispatch(soltarPieza())
     }
     
-    function handlePiezaSoltada(estaPresionada:boolean){
-        estadoPartidaDispatcher(
-            {
-                type: EventosPartida.PIEZA_SOLTADA,
-                hayPiezaPresionada: estaPresionada
-            } as EventoPiezaPulsadaInterface
-        )
-    }
+
     function handlePiezaTocada(casillaPresionada:CasillaInterface){
-        estadoPartidaDispatcher(
-            {
-                type: EventosPartida.PIEZA_TOCADA,
-                casillaPresionada:casillaPresionada,
-                hayPiezaPresionada:true
-            }
-        )
+        dispatch(tocarPieza(casillaPresionada))
     }
     //hay que pasar toda la casilla
     function pulsacionEnTablero(casillaPresionada:CasillaInterface){
 
-            if (estadoPartida.hayPiezaPresionada){
-                handlePiezaSoltada(false)
-                logicaMovimientoEsValido(estadoPartida.casillaPresionada,posicionTablero,casillaPresionada);
+            if (hayPiezaTocada){
+                handlePiezaSoltada(casillaPresionada);
             }
             else{
                 if (casillaPresionada.getPieza()){
@@ -77,10 +46,9 @@ export default function TableroTag() {
         
 
     }
-    const casillas=posicionTablero.getCasillas().map((casilla, index) => {
+    const casillas=posicionEnTablero.getCasillas().map((casilla, index) => {
         
         return (
-            
             <CasillaTag 
             color={casilla.getColor()} 
             numeroCasilla={casilla.getNumero()}
@@ -96,7 +64,10 @@ export default function TableroTag() {
         //meter esto en app?
             <div>  
                 <div>
-                    {estadoPartida.siguienteJugador}
+                    {hayPiezaTocada?'Hay pieza tocada':'No hay pieza tocada'}
+                </div>
+                <div>
+                    Juega el jugador {siguienteJugador}
                 </div>
 
             <div className='tablero'>
