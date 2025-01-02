@@ -1,6 +1,7 @@
 import { Casilla, CasillaInterface } from "../interfaces/casilla";
 import { PIEZAS,DIRECCIONES_TORRE,DIRECCIONES_ALFIL, DIRECCIONES_REINA } from "../constants";
 import { obtenDireccionSentido } from "./utilidades";
+import { TableroInterface } from "../interfaces/Tablero";
 type DireccionPosibleStrategy = (direccionSentido: any) => boolean;
 
 
