@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { RootState } from '../store'
 import { CasillaInterface,Casilla } from '../../interfaces/casilla';
 import { TableroInterface } from '../../interfaces/Tablero';
+import { MovimientosEspecialesInterface } from '../../interfaces/movimientosEspeciales';
 import { generateInitialState } from '../../utils/initial_state';
 import { COLOR_PIEZA } from '../../constants';
 interface EstadoPartida{
@@ -9,6 +10,7 @@ interface EstadoPartida{
     turno:number,
     casillaPresionada:CasillaInterface
     posicionTablero:TableroInterface
+    movimientosEspeciales:MovimientosEspecialesInterface
 }
 const estadoInicialPartida:EstadoPartida={
     hayPiezaPresionada:false,
@@ -21,7 +23,10 @@ const estadoInicialPartida:EstadoPartida={
       pieza:'',
       colorPieza:''
     }),
-    posicionTablero:generateInitialState()
+    posicionTablero:generateInitialState(),
+    movimientosEspeciales:{
+        alPaso:[]
+    }
 }
 export const estadoPartidaSlice = createSlice({
   name: 'estadorPartida',
@@ -37,6 +42,9 @@ export const estadoPartidaSlice = createSlice({
     actualizarPosicionTablero:(state,action)=>{
         state.posicionTablero=state.posicionTablero.updateTableroAfterMovement(action.payload.piezaTocada,action.payload.casillaDestino) 
         state.turno++
+    },
+    actualizarMovimientosEspeciales:(state,action)=>{
+        state.movimientosEspeciales.alPaso=action.payload
     }
   }
 })
@@ -45,7 +53,8 @@ export const selectTurno=(state:RootState)=>state.estadoPartida.turno
 export const selecPiezaTocada=(state:RootState)=>state.estadoPartida.casillaPresionada
 export const selectPosicionTablero=(state:RootState)=>state.estadoPartida.posicionTablero
 export const selectSiguienteJugador=(state:RootState)=>state.estadoPartida.turno%2===0?COLOR_PIEZA.BLANCO:COLOR_PIEZA.NEGRO
+export const selectCasillaAlPaso=(state:RootState)=>state.estadoPartida.movimientosEspeciales
 // Action creators are generated for each case reducer function
-export const { soltarPieza, tocarPieza, actualizarPosicionTablero } = estadoPartidaSlice.actions
+export const { soltarPieza, tocarPieza, actualizarPosicionTablero, actualizarMovimientosEspeciales } = estadoPartidaSlice.actions
 
 export default estadoPartidaSlice.reducer

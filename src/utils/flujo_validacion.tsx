@@ -6,10 +6,19 @@ import { movimientoEnRango } from "./validadores_rango";
 import { direccionPosible } from "./validador_direccion";
 import { esComestible,casillaOcupada } from "./utilidades";
 import { TableroInterface } from "../interfaces/Tablero";
+import { MovimientosEspecialesInterface } from "../interfaces/movimientosEspeciales";
+
+interface MovimientoValidoArgumentos{
+    casillaOrigen:CasillaInterface,
+    posicionTablero:TableroInterface,
+    casillaDestino:CasillaInterface,
+    siguienteJugador:COLOR_PIEZA,
+    movimientosEspeciales:MovimientosEspecialesInterface
+}
 
 export interface MovimientoHandler {
         siguienteCondicion(handler: MovimientoHandler): MovimientoHandler;
-        evaluar(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface, posicionTablero: TableroInterface): boolean;
+        evaluar(argumentosMovimientosValidos:MovimientoValidoArgumentos): boolean;
     }
 
 export abstract class AbstractMovimientoHandler implements MovimientoHandler {
@@ -21,9 +30,9 @@ export abstract class AbstractMovimientoHandler implements MovimientoHandler {
             return handler;
         }
         
-        public evaluar(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface, posicionTablero: TableroInterface): boolean {
+        public evaluar(argumentosMovimientosValidos:MovimientoValidoArgumentos): boolean {
             if (this.siguienteValidador) {
-                return this.siguienteValidador.evaluar(casillaOrigen, casillaDestino, posicionTablero);
+                return this.siguienteValidador.evaluar(argumentosMovimientosValidos);
             }
             return true;
         }
@@ -34,61 +43,67 @@ export abstract class AbstractMovimientoHandler implements MovimientoHandler {
 class RangoEvaluador extends AbstractMovimientoHandler {
 
         //ver si lo debe evaluar. si es asi lo evaluas, si falla return false, si no falla, que pase al siguiente, si no debe evaluarlo que pase al siguiente
-        public evaluar(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface, posicionTablero: TableroInterface): boolean {
-            if (PIEZAS_DE_RANGO.includes(casillaOrigen.getPieza() as PIEZAS)) {
+        public evaluar(argumentosMovimientosValidos:MovimientoValidoArgumentos): boolean {
+            if (PIEZAS_DE_RANGO.includes(argumentosMovimientosValidos.casillaOrigen.getPieza() as PIEZAS)) {
                 console.log('rango')
-                if (movimientoEnRango(casillaOrigen, casillaDestino, posicionTablero)){
-                    return super.evaluar(casillaOrigen, casillaDestino, posicionTablero);
+                if (movimientoEnRango(
+                    {
+                        casillaOrigen:argumentosMovimientosValidos.casillaOrigen,
+                        casillaDestino:argumentosMovimientosValidos.casillaDestino,
+                        posicionTablero:argumentosMovimientosValidos.posicionTablero,
+                        movimientosEspeciales:argumentosMovimientosValidos.movimientosEspeciales
+                    })){
+                    return super.evaluar(argumentosMovimientosValidos);
                 }else{
                     return false
                 };
             }
-            return super.evaluar(casillaOrigen, casillaDestino, posicionTablero);
+            return super.evaluar(argumentosMovimientosValidos);
         }
     }
 
 class DireccionEvaluador extends AbstractMovimientoHandler {
-        public evaluar(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface, posicionTablero: TableroInterface): boolean {
-            if (PIEZAS_DE_DIRECCION.includes(casillaOrigen.getPieza() as PIEZAS)) {
+        public evaluar(argumentosMovimientosValidos:MovimientoValidoArgumentos): boolean {
+            if (PIEZAS_DE_DIRECCION.includes(argumentosMovimientosValidos.casillaOrigen.getPieza() as PIEZAS)) {
                 console.log('direccion')
-                if(direccionPosible(casillaOrigen, casillaDestino)){
-                    return super.evaluar(casillaOrigen, casillaDestino, posicionTablero);
+                if(direccionPosible(argumentosMovimientosValidos.casillaOrigen, argumentosMovimientosValidos.casillaDestino)){
+                    return super.evaluar(argumentosMovimientosValidos);
                 }else{
                     return false
                 };
             }
-            return super.evaluar(casillaOrigen, casillaDestino, posicionTablero);
+            return super.evaluar(argumentosMovimientosValidos);
         }
     }
 
 class CaminoLibreEvaluador extends AbstractMovimientoHandler {
-        public evaluar(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface, posicionTablero: TableroInterface): boolean {
-            if (PIEZAS_CAMINO_LIBRE.includes(casillaOrigen.getPieza() as PIEZAS)) {
+        public evaluar(argumentosMovimientosValidos:MovimientoValidoArgumentos): boolean {
+            if (PIEZAS_CAMINO_LIBRE.includes(argumentosMovimientosValidos.casillaOrigen.getPieza() as PIEZAS)) {
                 console.log('camino libre')
-                if (caminoLibre(casillaOrigen, casillaDestino, posicionTablero)){
-                    return super.evaluar(casillaOrigen, casillaDestino, posicionTablero);
+                if (caminoLibre(argumentosMovimientosValidos.casillaOrigen, argumentosMovimientosValidos.casillaDestino, argumentosMovimientosValidos.posicionTablero)){
+                    return super.evaluar(argumentosMovimientosValidos);
                 }else{
                     return false
                 };
             }
-            return super.evaluar(casillaOrigen, casillaDestino, posicionTablero);
+            return super.evaluar(argumentosMovimientosValidos);
         }
 
 
     }
 
 class CasillaOcupable extends AbstractMovimientoHandler {
-        public evaluar(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface, posicionTablero: TableroInterface): boolean {
+        public evaluar(argumentosMovimientosValidos:MovimientoValidoArgumentos): boolean {
             console.log('casilla ocupada')
-            if (casillaOcupada(casillaDestino)) {
-                return this.casillaOcupadaEvaluacion(casillaOrigen, casillaDestino, posicionTablero)
+            if (casillaOcupada(argumentosMovimientosValidos.casillaDestino)) {
+                return this.casillaOcupadaEvaluacion(argumentosMovimientosValidos)
             }else{
-                return super.evaluar(casillaOrigen, casillaDestino, posicionTablero)
+                return super.evaluar(argumentosMovimientosValidos)
             }
         }
-        public casillaOcupadaEvaluacion(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface, posicionTablero: TableroInterface): boolean {
-            if(esComestible(casillaOrigen, casillaDestino)){
-                return super.evaluar(casillaOrigen, casillaDestino, posicionTablero)
+        public casillaOcupadaEvaluacion(argumentosMovimientosValidos:MovimientoValidoArgumentos): boolean {
+            if(esComestible(argumentosMovimientosValidos.casillaOrigen, argumentosMovimientosValidos.casillaDestino)){
+                return super.evaluar(argumentosMovimientosValidos)
             }
             else{
                 return false
@@ -97,14 +112,23 @@ class CasillaOcupable extends AbstractMovimientoHandler {
         
     }
 
-export function movimientoValido(casillaOrigen:CasillaInterface,posicionTablero:TableroInterface,casillaDestino:CasillaInterface,siguienteJugador:COLOR_PIEZA){
-        if (casillaOrigen.getColorPieza()!==siguienteJugador){
+class JugadorPermitido extends AbstractMovimientoHandler{
+    public evaluar(argumentosMovimientosValidos:MovimientoValidoArgumentos): boolean {
+        if (argumentosMovimientosValidos.casillaOrigen.getColorPieza()!==argumentosMovimientosValidos.siguienteJugador){
             return false
         }
+        return super.evaluar(argumentosMovimientosValidos);
+    }
+
+}
+
+
+export function movimientoValido(argumentosMovimientoValido:MovimientoValidoArgumentos){
+        const jugadorPermitido = new JugadorPermitido();
         const rangoEvaluador = new RangoEvaluador();
         const direccionEvaluador = new DireccionEvaluador();
         const caminoLibreEvaluador = new CaminoLibreEvaluador();
         const casillaOcupableEvaluador = new CasillaOcupable();
-        rangoEvaluador.siguienteCondicion(direccionEvaluador).siguienteCondicion(caminoLibreEvaluador).siguienteCondicion(casillaOcupableEvaluador);
-        return rangoEvaluador.evaluar(casillaOrigen, casillaDestino, posicionTablero);
+        jugadorPermitido.siguienteCondicion(rangoEvaluador).siguienteCondicion(direccionEvaluador).siguienteCondicion(caminoLibreEvaluador).siguienteCondicion(casillaOcupableEvaluador);
+        return jugadorPermitido.evaluar(argumentosMovimientoValido);
     }

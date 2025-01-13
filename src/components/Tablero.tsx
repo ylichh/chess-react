@@ -5,25 +5,34 @@ import { CasillaInterface } from '../interfaces/casilla';
 import { TableroInterface } from '../interfaces/Tablero';
 
 import { movimientoValido } from '../utils/flujo_validacion';
-
+import { calcularMovimientosEspeciales } from '../utils/calcular_movimientos_especiales';
 //redux
 //setup
 import { useAppSelector,useAppDispatch } from '../redux/hooks';
 //slices
-import {actualizarPosicionTablero, tocarPieza, soltarPieza, selecPiezaTocada,selectPosicionTablero,selectSiguienteJugador,selectPiezaEstaTocada } from '../redux/slices/partida';
+import {actualizarPosicionTablero, actualizarMovimientosEspeciales, tocarPieza, soltarPieza, selecPiezaTocada,selectPosicionTablero,selectSiguienteJugador,selectPiezaEstaTocada,selectCasillaAlPaso } from '../redux/slices/partida';
 export default function TableroTag() {
 
     const hayPiezaTocada=useAppSelector(selectPiezaEstaTocada)
     const piezaTocada=useAppSelector(selecPiezaTocada)
     const siguienteJugador=useAppSelector(selectSiguienteJugador)
     const posicionEnTablero=useAppSelector(selectPosicionTablero)
+    const movimientosEspeciales=useAppSelector(selectCasillaAlPaso)
     const dispatch=useAppDispatch()
 
 
     function handlePiezaSoltada(casillaDestino:CasillaInterface){
-        if (movimientoValido(piezaTocada,posicionEnTablero,casillaDestino,siguienteJugador)){
+        if (movimientoValido(
+            {
+                casillaOrigen:piezaTocada,
+                posicionTablero:posicionEnTablero,
+                casillaDestino:casillaDestino,
+                siguienteJugador:siguienteJugador,
+                movimientosEspeciales:movimientosEspeciales
+            })
+        ){
             dispatch(actualizarPosicionTablero({piezaTocada:piezaTocada,casillaDestino:casillaDestino}))
-            console.log('movimiento valido');
+            dispatch(actualizarMovimientosEspeciales(calcularMovimientosEspeciales({piezaTocada,casillaDestino})))
         }
         dispatch(soltarPieza())
     }
