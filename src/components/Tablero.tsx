@@ -1,25 +1,13 @@
-import "../styles/Tablero.css";
-import CasillaTag from "./Casilla";
-import { CasillaInterface } from "../interfaces/casilla";
-import { TableroInterface } from "../interfaces/Tablero";
-
-import { movimientoValido } from "../utils/flujo_validacion";
-import { calcularMovimientosEspeciales } from "../utils/calcular_movimientos_especiales";
+import '../styles/Tablero.css';
+import CasillaTag from './Casilla';
+import { CasillaInterface } from '../interfaces/casilla';
+import { movimientoValido } from '../utils/flujo_validacion';
+import { calcularMovimientosEspeciales } from '../utils/calcular_movimientos_especiales';
 //redux
 //setup
-import { useAppSelector, useAppDispatch } from "../redux/hooks";
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
 //slices
-import {
-  actualizarPosicionTablero,
-  actualizarMovimientosEspeciales,
-  tocarPieza,
-  soltarPieza,
-  selecPiezaTocada,
-  selectPosicionTablero,
-  selectSiguienteJugador,
-  selectPiezaEstaTocada,
-  selectCasillaAlPaso,
-} from "../redux/slices/partida";
+import { actualizarPosicionTablero, actualizarMovimientosEspeciales, tocarPieza, soltarPieza, selecPiezaTocada, selectPosicionTablero, selectSiguienteJugador, selectPiezaEstaTocada, selectCasillaAlPaso } from '../redux/slices/partida';
 export default function TableroTag() {
   const hayPiezaTocada = useAppSelector(selectPiezaEstaTocada);
   const piezaTocada = useAppSelector(selecPiezaTocada);
@@ -44,11 +32,7 @@ export default function TableroTag() {
           casillaDestino: casillaDestino,
         })
       );
-      dispatch(
-        actualizarMovimientosEspeciales(
-          calcularMovimientosEspeciales({ piezaTocada, casillaDestino })
-        )
-      );
+      dispatch(actualizarMovimientosEspeciales(calcularMovimientosEspeciales({ piezaTocada, casillaDestino })));
     }
     dispatch(soltarPieza());
   }
@@ -67,23 +51,12 @@ export default function TableroTag() {
     }
   }
   const casillas = posicionEnTablero.getCasillas().map((casilla, index) => {
-    return (
-      <CasillaTag
-        color={casilla.getColor()}
-        numeroCasilla={casilla.getNumero()}
-        pieza={casilla.getPieza()}
-        colorPieza={casilla.getColorPieza()}
-        columna={casilla.getColumna()}
-        fila={casilla.getFila()}
-        pulsacionEnTablero={pulsacionEnTablero}
-        key={"casilla" + index}
-      ></CasillaTag>
-    );
+    return <CasillaTag color={casilla.getColor()} numeroCasilla={casilla.getNumero()} pieza={casilla.getPieza()} colorPieza={casilla.getColorPieza()} columna={casilla.getColumna()} fila={casilla.getFila()} pulsacionEnTablero={pulsacionEnTablero} key={'casilla' + index}></CasillaTag>;
   });
   return (
     //meter esto en app?
     <div>
-      <div>{hayPiezaTocada ? "Hay pieza tocada" : "No hay pieza tocada"}</div>
+      <div>{hayPiezaTocada ? 'Hay pieza tocada' : 'No hay pieza tocada'}</div>
       <div>Juega el jugador {siguienteJugador}</div>
 
       <div className="tablero">{casillas}</div>
