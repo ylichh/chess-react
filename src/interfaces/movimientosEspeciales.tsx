@@ -1,4 +1,4 @@
-import { CasillaInterface } from "./casilla"
-export interface MovimientosEspecialesInterface{
-    alPaso:CasillaInterface[]
+import { CasillaInterface } from "./casilla";
+export interface MovimientosEspecialesInterface {
+  alPaso: CasillaInterface[];
 }
