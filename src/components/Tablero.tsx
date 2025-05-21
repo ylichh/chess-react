@@ -1,7 +1,7 @@
 import '../styles/Tablero.css';
 import CasillaTag from './Casilla';
 import { CasillaInterface } from '../interfaces/casilla';
-import { movimientoValido } from '../utils/flujo_validacion';
+import { validarMovimiento } from '../logicas_validacion/validarMovimiento';
 import { calcularMovimientosEspeciales } from '../utils/calcular_movimientos_especiales';
 //redux
 //setup
@@ -18,7 +18,7 @@ export default function TableroTag() {
 
   function handlePiezaSoltada(casillaDestino: CasillaInterface) {
     if (
-      movimientoValido({
+      validarMovimiento({
         casillaOrigen: piezaTocada,
         posicionTablero: posicionEnTablero,
         casillaDestino: casillaDestino,

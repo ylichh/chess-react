@@ -1,16 +1,12 @@
-import { Casilla, CasillaInterface } from "../interfaces/casilla";
-import { PIEZAS } from "../constants";
+import { Casilla, CasillaInterface } from '../interfaces/casilla';
+import { PIEZAS } from '../constants';
 interface CalcularMovimientosEspecialesArgs {
   piezaTocada: CasillaInterface;
   casillaDestino: CasillaInterface;
 }
 //movimientos especiales: al paso, coronacion, enroque
-type EstrategiaMovimientoEspecial = (
-  args: CalcularMovimientosEspecialesArgs
-) => CasillaInterface[];
-export function calcularMovimientosEspeciales(
-  ultimoMovimientos: CalcularMovimientosEspecialesArgs
-): CasillaInterface[] {
+type EstrategiaMovimientoEspecial = (args: CalcularMovimientosEspecialesArgs) => CasillaInterface[];
+export function calcularMovimientosEspeciales(ultimoMovimientos: CalcularMovimientosEspecialesArgs): CasillaInterface[] {
   let estrategia: EstrategiaMovimientoEspecial;
   switch (ultimoMovimientos.piezaTocada.getPieza()) {
     case PIEZAS.PEON_BLANCO:
@@ -22,9 +18,7 @@ export function calcularMovimientosEspeciales(
   }
   return estrategia(ultimoMovimientos);
 }
-export function calcularAlPaso(
-  ultimoMovimientos: CalcularMovimientosEspecialesArgs
-): CasillaInterface[] {
+export function calcularAlPaso(ultimoMovimientos: CalcularMovimientosEspecialesArgs): CasillaInterface[] {
   const piezaTocada = ultimoMovimientos.piezaTocada;
   const casillaDestino = ultimoMovimientos.casillaDestino;
   let casillasAlPaso: CasillaInterface[] = [];

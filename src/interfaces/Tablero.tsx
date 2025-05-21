@@ -1,7 +1,7 @@
 import { CasillaInterface, Casilla } from './casilla';
 
 import { clasificarMovimiento } from '../utils/clasificador_movimiento';
-import { obtenDireccionSentido } from '../utils/utilidades';
+import { obtenDireccionSentidoLineal } from '../utils/utilidades';
 import { ListaMovimientos } from '../constants';
 export interface TableroInterface {
   getCasillaFromColumnFile(datosCasilla: CasillaInterface): CasillaInterface | undefined;
@@ -86,7 +86,7 @@ export class Tablero implements TableroInterface {
     return this;
   }
   actualizaAlPaso = (casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface): TableroInterface => {
-    const direcctionSentido = obtenDireccionSentido(casillaOrigen, casillaDestino);
+    const direcctionSentido = obtenDireccionSentidoLineal(casillaOrigen, casillaDestino);
     const coordenadasCasillaCapturada = new Casilla({
       columna: casillaDestino.getColumna(),
       fila: casillaDestino.getFila() - direcctionSentido.sentidoFila,
