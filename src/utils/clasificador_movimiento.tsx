@@ -1,6 +1,6 @@
 import { PIEZAS } from '../constants';
 import { CasillaInterface } from '../interfaces/casilla';
-import { obtenDireccionSentido, casillaOcupada } from './utilidades';
+import { obtenDireccionSentidoLineal, casillaOcupada } from './utilidades';
 import { ListaMovimientos } from '../constants';
 type ClasificadorMovimientoEstrategia = (casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface) => ListaMovimientos;
 ///Este modulo es posterior a la validación de los movimientos, por ello no contempla errores
@@ -32,7 +32,7 @@ export function clasificarMovimiento(casillaOrigen: CasillaInterface, casillaDes
 }
 
 function clasificadorMovimientoPeon(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface): ListaMovimientos {
-  const direccionSentido = obtenDireccionSentido(casillaOrigen, casillaDestino);
+  const direccionSentido = obtenDireccionSentidoLineal(casillaOrigen, casillaDestino);
   const esDiagonal = direccionSentido.sentidoColumna !== 0 && direccionSentido.sentidoFila !== 0;
   const estaOcupada = casillaOcupada(casillaDestino);
   if (esDiagonal && estaOcupada) {

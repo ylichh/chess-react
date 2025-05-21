@@ -1,14 +1,20 @@
-import { Casilla, CasillaInterface } from '../interfaces/casilla';
-export function obtenDireccionSentido(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface) {
-  let filaDestino = casillaDestino.getFila();
-  let filaOrigen = casillaOrigen.getFila();
-  let sentidoFila = 0;
-  sentidoFila = obtenSigno(filaDestino - filaOrigen);
-  let columnaDestino = casillaDestino.getColumna();
-  let columnaOrigen = casillaOrigen.getColumna();
-  let sentidoColumna = 0;
-  sentidoColumna = obtenSigno(columnaDestino - columnaOrigen);
-  return { sentidoFila: sentidoFila, sentidoColumna: sentidoColumna };
+import { CasillaInterface } from '../interfaces/casilla';
+export function obtenDireccionSentidoLineal(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface) {
+  const filaDestino = casillaDestino.getFila();
+  const filaOrigen = casillaOrigen.getFila();
+  const desplazamientoFila = filaDestino - filaOrigen;
+  const desplazamientoAbsFila = Math.abs(desplazamientoFila);
+
+  const columnaDestino = casillaDestino.getColumna();
+  const columnaOrigen = casillaOrigen.getColumna();
+  const desplazamientoColumna = columnaDestino - columnaOrigen;
+  const desplazamientoAbsColumna = Math.abs(desplazamientoColumna);
+  if (desplazamientoAbsColumna === desplazamientoAbsFila || desplazamientoAbsColumna === 0 || desplazamientoAbsFila === 0) {
+    const vectorDireccion = obtenerVectorIteracion(desplazamientoColumna, desplazamientoFila);
+    return vectorDireccion;
+  } else {
+    throw new Error('Movimiento no lineal');
+  }
 }
 
 export function obtenSigno(numero: number): number {
@@ -17,6 +23,19 @@ export function obtenSigno(numero: number): number {
   return 0;
 }
 
+export function obtenerVectorIteracion(desplazamientoColumna: number, desplazamientoFila: number) {
+  return {
+    sentidoColumna: obtenSigno(desplazamientoColumna),
+    sentidoFila: obtenSigno(desplazamientoFila),
+  };
+}
+
+export function normalizar_vector(sentidoColumna: number, sentidoFila: number): { sentidoColumna: number; sentidoFila: number } {
+  const mcd = Math.abs(sentidoColumna) > Math.abs(sentidoFila) ? Math.abs(sentidoColumna) : Math.abs(sentidoFila);
+  sentidoColumna = sentidoColumna / mcd;
+  sentidoFila = sentidoFila / mcd;
+  return { sentidoColumna: sentidoColumna, sentidoFila: sentidoFila };
+}
 export function casillaOcupada(casillaDestino: CasillaInterface) {
   return casillaDestino.getPieza() !== '';
 }
