@@ -2,7 +2,8 @@ import { CasillaInterface, Casilla } from './casilla';
 
 import { clasificarMovimiento } from '../utils/clasificador_movimiento';
 import { obtenDireccionSentidoLineal } from '../utils/utilidades';
-import { ListaMovimientos } from '../constants';
+import { ListaMovimientos, COLOR_PIEZA, PIEZAS } from '../constants';
+
 export interface TableroInterface {
   getCasillaFromColumnFile(datosCasilla: CasillaInterface): CasillaInterface | undefined;
   getCasillas(): CasillaInterface[];
@@ -43,7 +44,6 @@ export class Tablero implements TableroInterface {
     //clasificar movimiento: desplazamiento, comer, enroque, coronacion, al paso
     const movimiento = clasificarMovimiento(casillaOrigen, casillaDestino);
     let estrategiaActualizacion: (casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface) => TableroInterface;
-
     switch (movimiento) {
       case ListaMovimientos.AL_PASO:
         estrategiaActualizacion = this.actualizaAlPaso;
@@ -55,7 +55,8 @@ export class Tablero implements TableroInterface {
       case ListaMovimientos.ENROQUE:
         estrategiaActualizacion = this.actualizaEnroque;
         break;
-      case ListaMovimientos.CORONACION:
+      case ListaMovimientos.DESPLAZAMIENTO_Y_CORONACION:
+      case ListaMovimientos.CAPTURA_Y_CORONACION:
         estrategiaActualizacion = this.actualizaCoronacion;
         break;
       default:
@@ -82,9 +83,19 @@ export class Tablero implements TableroInterface {
   actualizaEnroque(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface): TableroInterface {
     return this;
   }
-  actualizaCoronacion(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface): TableroInterface {
+  actualizaCoronacion = (casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface): TableroInterface => {
+    this.actualizacionEstandar(casillaOrigen, casillaDestino);
+    const casillaDestinoActualizada: CasillaInterface | undefined = this.getCasillaFromColumnFile(casillaDestino);
+    if (casillaOrigen.getColorPieza() === COLOR_PIEZA.BLANCO) {
+      casillaDestinoActualizada?.setPiezaConColor(COLOR_PIEZA.BLANCO, PIEZAS.REINA_BLANCA);
+    } else {
+      casillaDestinoActualizada?.setPiezaConColor(COLOR_PIEZA.BLANCO, PIEZAS.REINA_NEGRA);
+    }
     return this;
-  }
+  };
+  actualizaCapturaCoronacion = (casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface): TableroInterface => {
+    return this;
+  };
   actualizaAlPaso = (casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface): TableroInterface => {
     const direcctionSentido = obtenDireccionSentidoLineal(casillaOrigen, casillaDestino);
     const coordenadasCasillaCapturada = new Casilla({

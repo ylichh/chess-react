@@ -35,19 +35,37 @@ function clasificadorMovimientoPeon(casillaOrigen: CasillaInterface, casillaDest
   const direccionSentido = obtenDireccionSentidoLineal(casillaOrigen, casillaDestino);
   const esDiagonal = direccionSentido.sentidoColumna !== 0 && direccionSentido.sentidoFila !== 0;
   const estaOcupada = casillaOcupada(casillaDestino);
+  const finalTablero = esFinalDeTablero(casillaOrigen, casillaDestino);
+  debugger;
   if (esDiagonal && estaOcupada) {
+    if (finalTablero) {
+      return ListaMovimientos.CAPTURA_Y_CORONACION;
+    }
     return ListaMovimientos.CAPTURA;
   }
+
   if (esDiagonal && !estaOcupada) {
     return ListaMovimientos.AL_PASO;
   }
 
   if (!esDiagonal && !estaOcupada) {
+    if (finalTablero) {
+      return ListaMovimientos.DESPLAZAMIENTO_Y_CORONACION;
+    }
     return ListaMovimientos.DESPLAZAMIENTO;
   }
+  //un movimiento puede ser captura y coronacion a la vez
   throw new Error('Movimiento no encontrado');
 }
-
+function esFinalDeTablero(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface): boolean {
+  if (casillaOrigen.getPieza() === PIEZAS.PEON_BLANCO) {
+    return casillaDestino.getFila() === 7;
+  }
+  if (casillaOrigen.getPieza() === PIEZAS.PEON_NEGRO) {
+    return casillaDestino.getFila() === 0;
+  }
+  return false;
+}
 function clasificadorEstandar(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface): ListaMovimientos {
   const estaOcupada = casillaOcupada(casillaDestino);
   if (estaOcupada) {
