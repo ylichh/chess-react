@@ -55,8 +55,7 @@ export class Tablero implements TableroInterface {
       case ListaMovimientos.ENROQUE:
         estrategiaActualizacion = this.actualizaEnroque;
         break;
-      case ListaMovimientos.DESPLAZAMIENTO_Y_CORONACION:
-      case ListaMovimientos.CAPTURA_Y_CORONACION:
+      case ListaMovimientos.CORONACION:
         estrategiaActualizacion = this.actualizaCoronacion;
         break;
       default:

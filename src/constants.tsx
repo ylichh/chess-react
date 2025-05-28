@@ -63,5 +63,5 @@ export enum ListaMovimientos {
   CAPTURA,
   AL_PASO,
   ENROQUE,
-  DESPLAZAMIENTO_Y_CORONACION,
+  CORONACION,
 }

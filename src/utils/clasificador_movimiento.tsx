@@ -36,10 +36,10 @@ function clasificadorMovimientoPeon(casillaOrigen: CasillaInterface, casillaDest
   const esDiagonal = direccionSentido.sentidoColumna !== 0 && direccionSentido.sentidoFila !== 0;
   const estaOcupada = casillaOcupada(casillaDestino);
   const finalTablero = esFinalDeTablero(casillaOrigen, casillaDestino);
-  debugger;
+
   if (esDiagonal && estaOcupada) {
     if (finalTablero) {
-      return ListaMovimientos.CAPTURA_Y_CORONACION;
+      return ListaMovimientos.CORONACION;
     }
     return ListaMovimientos.CAPTURA;
   }
@@ -50,7 +50,7 @@ function clasificadorMovimientoPeon(casillaOrigen: CasillaInterface, casillaDest
 
   if (!esDiagonal && !estaOcupada) {
     if (finalTablero) {
-      return ListaMovimientos.DESPLAZAMIENTO_Y_CORONACION;
+      return ListaMovimientos.CORONACION;
     }
     return ListaMovimientos.DESPLAZAMIENTO;
   }
