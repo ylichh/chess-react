@@ -59,6 +59,7 @@ export enum EventosPartida {
 
 export enum ListaMovimientos {
   DESPLAZAMIENTO,
+  CAPTURA_Y_CORONACION,
   CAPTURA,
   AL_PASO,
   ENROQUE,

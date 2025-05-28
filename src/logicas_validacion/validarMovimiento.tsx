@@ -4,6 +4,7 @@ import { PIEZAS } from '../constants';
 import { validadorPeon } from './cadenasValidacion/peon';
 import { validadorEstandar } from './cadenasValidacion/estandar';
 import { validadorRey } from './cadenasValidacion/rey';
+import { validadorCaballo } from './cadenasValidacion/caballo';
 import { MovimientoValidoArgumentos } from './evaluadorInterfaz';
 // interface EstrategiaValidacionParams {
 //   casillaOrigen: CasillaInterface;
@@ -22,11 +23,13 @@ export function validarMovimiento(argumentosValidacion: MovimientoValidoArgument
     case PIEZAS.ALFIL_NEGRO:
     case PIEZAS.TORRE_BLANCA:
     case PIEZAS.TORRE_NEGRA:
-    case PIEZAS.CABALLO_BLANCO:
-    case PIEZAS.CABALLO_NEGRO:
     case PIEZAS.REINA_BLANCA:
     case PIEZAS.REINA_NEGRA:
       estrategiaValidacion = validadorEstandar;
+      break;
+    case PIEZAS.CABALLO_BLANCO:
+    case PIEZAS.CABALLO_NEGRO:
+      estrategiaValidacion = validadorCaballo;
       break;
     case PIEZAS.REY_BLANCO:
     case PIEZAS.REY_NEGRO:

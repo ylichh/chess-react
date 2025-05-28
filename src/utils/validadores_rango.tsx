@@ -14,9 +14,6 @@ export interface MovimientoEnRangoArgumentos {
 type RangoPosibleStrategy = (argumentosMovimientoEnRango: MovimientoEnRangoArgumentos) => CasillaInterface[];
 
 export function movimientoEnRango(argumentosMovimientoEnRango: MovimientoEnRangoArgumentos): boolean {
-  const direccionSentido = obtenDireccionSentidoLineal(argumentosMovimientoEnRango.casillaOrigen, argumentosMovimientoEnRango.casillaDestino);
-  console.log(`direccion sentido de la pieza ${direccionSentido}`);
-
   let estrategia: RangoPosibleStrategy;
 
   switch (argumentosMovimientoEnRango.casillaOrigen.getPieza()) {
@@ -35,7 +32,7 @@ export function movimientoEnRango(argumentosMovimientoEnRango: MovimientoEnRango
     default:
       return false;
   }
-  let rango = estrategia(argumentosMovimientoEnRango);
+  const rango = estrategia(argumentosMovimientoEnRango);
   return rango.some((rango) => rango.getFila() === argumentosMovimientoEnRango.casillaDestino.getFila() && rango.getColumna() === argumentosMovimientoEnRango.casillaDestino.getColumna());
 }
 
