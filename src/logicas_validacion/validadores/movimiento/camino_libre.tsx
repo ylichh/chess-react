@@ -1,6 +1,6 @@
-import { CasillaInterface, Casilla } from '../interfaces/casilla';
-import { TableroInterface } from '../interfaces/Tablero';
-import { obtenDireccionSentidoLineal, casillaOcupada } from './utilidades';
+import { CasillaInterface, Casilla } from '../../../interfaces/casilla';
+import { TableroInterface } from '../../../interfaces/Tablero';
+import { obtenDireccionSentidoLineal, casillaOcupada } from '../../../utils/utilidades';
 
 export function caminoLibre(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface, posicionTablero: TableroInterface) {
   //direccion, sentido
