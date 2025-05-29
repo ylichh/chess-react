@@ -1,7 +1,7 @@
 import { PIEZAS, PIEZAS_DE_RANGO, PIEZAS_DE_DIRECCION, PIEZAS_CAMINO_LIBRE } from '../constants';
-import { caminoLibre } from '../utils/validadores_movimiento';
-import { movimientoEnRango } from '../utils/validadores_rango';
-import { direccionPosible } from '../utils/validador_direccion';
+import { caminoLibre } from '../logicas_validacion/validadores/movimiento/camino_libre';
+import { movimientoEnRango } from '../logicas_validacion/validadores/rango/patron';
+import { direccionPosible } from '../logicas_validacion/validadores/movimiento/validador_direccion';
 import { esComestible, casillaOcupada } from '../utils/utilidades';
 
 import { AbstractMovimientoHandler } from './evaluadorInterfaz';

@@ -1,6 +1,6 @@
-import { CasillaInterface } from '../interfaces/casilla';
-import { PIEZAS, DIRECCIONES_TORRE, DIRECCIONES_ALFIL, DIRECCIONES_REINA } from '../constants';
-import { obtenDireccionSentidoLineal } from './utilidades';
+import { CasillaInterface } from '../../../interfaces/casilla';
+import { PIEZAS, DIRECCIONES_TORRE, DIRECCIONES_ALFIL, DIRECCIONES_REINA } from '../../../constants';
+import { obtenDireccionSentidoLineal } from '../../../utils/utilidades';
 type DireccionPosibleStrategy = (direccionSentido: any) => boolean;
 
 export function direccionPosible(casillaOrigen: CasillaInterface, casillaDestino: CasillaInterface): boolean {
@@ -8,7 +8,7 @@ export function direccionPosible(casillaOrigen: CasillaInterface, casillaDestino
   try {
     direccionSentido = obtenDireccionSentidoLineal(casillaOrigen, casillaDestino);
   } catch (e) {
-    console.log('Movimiento no lineal');
+    console.log('Movimiento no lineal', e);
     return false;
   }
   console.log('direccion sentido de la pieza', direccionSentido);
@@ -49,6 +49,5 @@ const direccionPosibleReina: DireccionPosibleStrategy = (direccionSentido: any) 
 
 export function someDirecciones(direccionSentido: any, direccionesValidas: any[]) {
   let incluido = direccionesValidas.some((direcciones) => direcciones.sentidoFila === direccionSentido.sentidoFila && direcciones.sentidoColumna === direccionSentido.sentidoColumna);
-  debugger;
   return incluido;
 }
